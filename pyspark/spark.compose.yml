@@ -1,0 +1,25 @@
+services:
+  spark:
+    build:
+      context: ./spark
+    image: docker.io/local/spark:3.3.2
+    # image: bitnami/spark:3.3.2
+    container_name: spark_master
+    volumes:
+      - ./scripts:/opt/bitnami/spark/jobs/dist
+    env_file:
+      - .env
+      - master.env
+    ports:
+      - '8081:8080'
+  spark-worker:
+    build:
+      context: ./spark
+    image: docker.io/local/spark:3.3.2
+    # image: bitnami/spark:3.3.2
+    env_file:
+      - .env
+      - worker.env
+    depends_on:
+      - spark
+      - minio

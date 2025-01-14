@@ -1,0 +1,23 @@
+services:
+  jupyterlab:
+    image: jupyter/pyspark-notebook:spark-3.5.0
+    container_name: jupyterlab
+    command: [ "jupyter-lab", "--allow-root", "--NotebookApp.token=''", "--LabApp.token=''" ]
+    user: root
+    env_file:
+      - .env
+    environment:
+      PYSPARK_SUBMIT_ARGS: "--master local[*] pyspark-shell --conf spark.ui.port: 4040"
+      GRANT_SUDO: "yes"
+    ports:
+      - "8888:8888/tcp"
+      - "4040:4040/tcp"
+    restart: on-failure
+    volumes:
+      - .storage/jupyter:/home/jovyan/work
+
+volumes:
+  zookeeper_data:
+    driver: local
+  kafka_data:
+    driver: local
